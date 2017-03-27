@@ -1,29 +1,39 @@
 #include "Test.h"
-
+bool INITIALIZED = false;
 void StringListInit(char*** list, const ui init_size)
 {
-    void* allocate_memory = malloc(init_size * sizeof(char*) + 2 * sizeof(ui));
-    if(allocate_memory == 0)
+    if(INITIALIZED == false)
+    {
+        int memory_volume = init_size * sizeof(char*) + 2 * sizeof(ui);
+        void* allocate_memory = malloc(memory_volume);
+        if(allocate_memory == 0)
         {
             std::cout << "Cannon allocate memory";
             system("pause");
             exit(-1);
         }
-    memset(allocate_memory,0,init_size * sizeof(char*) + 2 * sizeof(ui));
-    ui* capacity = (ui*) allocate_memory;
-    ui* act_size = (ui*) allocate_memory + 1;
-    *capacity = init_size;
-    *act_size = 0;
-    *list = (char**) (capacity + 2);
+        memset(allocate_memory,0,memory_volume);
+        ui* capacity = (ui*) allocate_memory;
+        ui* act_size = (ui*) allocate_memory + 1;
+        *capacity = init_size;
+        *act_size = 0;
+        *list = (char**) (capacity + 2);
+        INITIALIZED = true;
+    }
+    else
+    {
+        std::cout << "List has been initialized" << '\n';
+        return;
+    }
 }
-
 
 void StringListDestroy(char*** list)
 {
     if(list != 0 && *list != 0)
     {
+        int list_size = StringListSize(*list);
         void* mem_volume = ((ui*)(*list)) - 2;
-        for(int i = 0; i < StringListSize(*list); ++i)
+        for(int i = 0; i < list_size; ++i)
         {
             char* mem_free = (*list)[i];
             free(mem_free);
@@ -37,13 +47,10 @@ void StringListDestroy(char*** list)
 
 int StringListIndexOf(const char* const* list, const char* str)
 {
-    int list_index = 0;
-    while(list)
+    for(int i = 0; i < StringListSize(list); ++i)
     {
         if(strcmp(*list,str) == 0)
-        return ++list_index;
-        list++;
-        ++list_index;
+        return i;
     }
      return -1;
 }
@@ -72,7 +79,8 @@ void StringListAdd(char*** list, const char* str)
     int position = StringListSize(*list);
     (*list)[position] = static_cast<char*>(malloc(strlen(str)+1));
     strcpy((*list)[position],str);
-    ++(*((*list)-1));
+    ui* act_size = (ui*) ((*list)-1);
+    ++(*act_size);
 }
 
 void RemoveString (char*** list,const char* str)
@@ -90,10 +98,12 @@ void RemoveString (char*** list,const char* str)
                     strcpy(((*list)[j]),((*list)[j+1]));
                 free((*list)[list_size]);
                 (*list)[list_size] = 0;
-                --(*((*list)-1));
+                ui* act_size = (ui*) ((*list)-1);
+                --(*act_size);
                  return;
             }
         }
+        std::cout << "String not found" << '/n';
     }
 }
 
@@ -111,6 +121,11 @@ void RemoveDuplicatesString(char*** list)
 
 void PrintList(const char* const* list)
 {
+    if(list == 0)
+    {
+        std::cout << "List doesn'n exist" << '/n';
+        return;
+    }
     int list_size = StringListSize(list);
     if(list_size == 0)
     {
@@ -119,7 +134,8 @@ void PrintList(const char* const* list)
     }
     for(int i = 0; i < list_size; ++i)
     {
-        for(int j = 0; j < strlen(*list); ++j)
+        int len = strlen(*list);
+        for(int j = 0; j < len; ++j)
             std::cout << (*list)[j];
 
         std::cout << ' ';
@@ -129,9 +145,11 @@ void PrintList(const char* const* list)
 
 void ListSort(char** const list)
 {
+    if(StringListSize(list) == 0)
+        std::cout << "List is empty" << '\n';
     for(int i = 0; i < StringListSize(list); ++i)
     {
-        for(int j = 0; j < StringListSize(list)-1;++j)
+        for(int j = i+1; j < StringListSize(list)-1;++j)
         {
             if(strcmp(list[j],list[j+1]) > 0)
                 Swap(&list[j],&list[j+1]);

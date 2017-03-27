@@ -5,6 +5,7 @@
 
 typedef unsigned int ui;
 
+
 int StringListIndexOf(const char* const* list, const char* str);
 void StringListDestroy(char*** list);
 void StringListAdd(char*** list,const char* str);

@@ -1,6 +1,5 @@
 #include "Test.h"
 
-
 int main(int argc, char** argv)
 {
     char** my_list;
@@ -31,10 +30,12 @@ int main(int argc, char** argv)
     ListSort(my_list);
     PrintList(my_list);
     std::cout << '\n';
-    RemoveString(&my_list,"Greb");
+    RemoveString(&my_list,"Gr");
     std::cout << '\n';
     PrintList(my_list);
     std::cout << '\n';
-//    StringListDestroy(&my_list);
+    std::cout << StringListSize(my_list) << '\n';
+    //StringListDestroy(&my_list);
+    //PrintList(my_list);
    return 0;
 }
