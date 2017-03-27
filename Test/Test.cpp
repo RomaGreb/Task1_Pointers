@@ -1,8 +1,8 @@
 #include "Test.h"
-bool INITIALIZED = false;
+
 void StringListInit(char*** list, const ui init_size)
 {
-    if(INITIALIZED == false)
+    if(list)
     {
         int memory_volume = init_size * sizeof(char*) + 2 * sizeof(ui);
         void* allocate_memory = malloc(memory_volume);
@@ -18,7 +18,6 @@ void StringListInit(char*** list, const ui init_size)
         *capacity = init_size;
         *act_size = 0;
         *list = (char**) (capacity + 2);
-        INITIALIZED = true;
     }
     else
     {
