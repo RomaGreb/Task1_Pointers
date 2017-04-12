@@ -35,7 +35,6 @@ int main(int argc, char** argv)
     PrintList(my_list);
     std::cout << '\n';
     std::cout << StringListSize(my_list) << '\n';
-    //StringListDestroy(&my_list);
-    //PrintList(my_list);
-   return 0;
+    StringListDestroy(&my_list);
+    return 0;
 }
